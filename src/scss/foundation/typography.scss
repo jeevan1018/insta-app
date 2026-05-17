@@ -1,0 +1,41 @@
+@use './varaibles' as vars;
+@use './mixins' as mixins;
+
+html {
+  font-family: vars.$font;
+  font-size: 100%;
+}
+
+body {
+  line-height: 1.5;
+  font-family: var(--font);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+p, span, a, button, input, textarea {
+  font-family: inherit;
+}
+
+a {
+  color: var(--text-link);
+  text-decoration: none;
+  @include mixins.transition(opacity, 0.15s);
+}
+
+a:hover,
+button:hover {
+  opacity: 0.8;
+}
+
+button {
+  cursor: pointer;
+}
+
+input, textarea {
+  font-family: inherit;
+}

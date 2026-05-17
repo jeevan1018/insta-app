@@ -1,0 +1,88 @@
+@use './foundation/varaibles' as vars;
+@use './foundation/mixins' as mixins;
+@use './foundation/typography' as *;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font: #{vars.$font};
+  --brand-start: #{vars.$brand-start};
+  --brand-mid: #{vars.$brand-mid};
+  --brand-end: #{vars.$brand-end};
+  --brand-gradient: linear-gradient(45deg, #{vars.$brand-start} 0%, #{vars.$brand-mid} 25%, #{vars.$brand-end} 75%);
+
+  --bg:            #fafafa;
+  --bg-card:       #ffffff;
+  --bg-input:      #f5f5f5;
+  --bg-input-focus:#ffffff;
+  --border:        #dbdbdb;
+  --border-focus:  #bc1888;
+  --text-primary:  #0a0a0a;
+  --text-secondary:#737373;
+  --text-hint:     #a8a8a8;
+  --text-link:     #bc1888;
+  --shadow-card:   0 2px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-btn:    0 4px 20px rgba(188,24,136,0.35);
+  --error-bg:      #fff0f0;
+  --error-border:  #ff3b30;
+  --error-text:    #d00;
+  --success-bg:    #f0fff4;
+  --success-border:#30d158;
+  --success-text:  #1a7a3a;
+  --toggle-bg:     #e8e8e8;
+  --toggle-thumb:  #ffffff;
+  --divider:       #dbdbdb;
+}
+
+[data-theme="dark"] {
+  --bg:            #000000;
+  --bg-card:       #121212;
+  --bg-input:      #1a1a1a;
+  --bg-input-focus:#222222;
+  --border:        #2a2a2a;
+  --border-focus:  #e1306c;
+  --text-primary:  #fafafa;
+  --text-secondary:#a8a8a8;
+  --text-hint:     #555555;
+  --text-link:     #e1306c;
+  --shadow-card:   0 2px 32px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.5);
+  --shadow-btn:    0 4px 24px rgba(225,48,108,0.4);
+  --error-bg:      #1a0000;
+  --error-border:  #ff453a;
+  --error-text:    #ff6b6b;
+  --success-bg:    #001a0a;
+  --success-border:#32d74b;
+  --success-text:  #30d158;
+  --toggle-bg:     #3a3a3a;
+  --toggle-thumb:  #fafafa;
+  --divider:       #2a2a2a;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html, body, #root {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}

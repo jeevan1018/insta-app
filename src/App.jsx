@@ -1,5 +1,4 @@
 import { BrowserRouter as Router } from 'react-router-dom'
-import './App.css'
 import AppStack from './routes/AppStack'
 import AuthStack from './routes/AuthStack'
 import useAuthStore from './store/authStore'
