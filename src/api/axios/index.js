@@ -13,9 +13,17 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token')
-    if (token) {
+    const url = config.url || ''
+
+    // Avoid sending auth header for public auth endpoints
+    if (
+      token &&
+      !url.includes('/user/login') &&
+      !url.includes('/user/register')
+    ) {
       config.headers.Authorization = `Bearer ${token}`
     }
+
     return config
   },
   (error) => {

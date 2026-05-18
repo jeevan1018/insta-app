@@ -9,7 +9,10 @@ const AppStack = () => {
       <Route element={<AuthWrapper />}>
         <Route path="/home" element={<HomePage />} />
       </Route>
+      <Route path="/login" element={<Navigate to="/home" replace />} />
+      <Route path="/register" element={<Navigate to="/home" replace />} />
       <Route path="/" element={<Navigate to="/home" replace />} />
+      <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   )
 }
