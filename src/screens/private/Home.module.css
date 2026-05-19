@@ -418,6 +418,68 @@
   letter-spacing: 0.02em;
 }
 
+/* Modal preview for profile photos */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 50;
+}
+
+.modalContent {
+  position: relative;
+  max-width: 92vw;
+  max-height: 92vh;
+  background: #fff;
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalImage {
+  max-width: 88vw;
+  max-height: 88vh;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.modalClose {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+/* Drag visuals */
+.photoTile[draggable] {
+  cursor: grab;
+}
+
+.photoTile[draggable]:active {
+  cursor: grabbing;
+}
+
+.photoTile.drag-over {
+  outline: 3px dashed rgba(0,0,0,0.12);
+  transform: scale(0.98);
+}
+
+.navButton[draggable] {
+  cursor: grab;
+}
+
+.navButton[draggable]:active {
+  cursor: grabbing;
+}
+
 @media (min-width: 640px) {
   .homePage {
     padding-bottom: 1rem;

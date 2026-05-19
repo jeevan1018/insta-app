@@ -90,8 +90,73 @@ const profilePhotos = [
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('home')
   const [homeSubTab, setHomeSubTab] = useState('posts')
+  const [modalOpen, setModalOpen] = useState(false)
+  const [modalImage, setModalImage] = useState(null)
   const dragRef = useRef(null)
   const dragState = useRef({ active: false, startX: 0, scrollLeft: 0 })
+
+  // Nav items - allow reorder via drag
+  const initialNav = [
+    { id: 'home', label: 'Home', icon: Home },
+    { id: 'reels', label: 'Reels', icon: Film },
+    { id: 'dm', label: 'DM', icon: MessageCircle },
+    { id: 'search', label: 'Search', icon: Search },
+    { id: 'profile', label: 'Profile', icon: User },
+  ]
+  const [navItems, setNavItems] = useState(initialNav)
+  const navDragIndex = useRef(null)
+
+  const handleNavDragStart = (e, index) => {
+    navDragIndex.current = index
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handleNavDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
+  const handleNavDrop = (e, index) => {
+    e.preventDefault()
+    const from = navDragIndex.current
+    const to = index
+    if (from === null || from === to) return
+    setNavItems((prev) => {
+      const copy = [...prev]
+      const [moved] = copy.splice(from, 1)
+      copy.splice(to, 0, moved)
+      return copy
+    })
+    navDragIndex.current = null
+  }
+
+  // Photos reorderable
+  const [photos, setPhotos] = useState(profilePhotos)
+  const photoDragIndex = useRef(null)
+
+  const handlePhotoDragStart = (e, index) => {
+    photoDragIndex.current = index
+    e.dataTransfer.effectAllowed = 'move'
+  }
+
+  const handlePhotoDragOver = (e) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+  }
+
+  const handlePhotoDrop = (e, index) => {
+    e.preventDefault()
+    const from = photoDragIndex.current
+    const to = index
+    if (from === null || from === to) return
+    setPhotos((prev) => {
+      const copy = [...prev]
+      const [moved] = copy.splice(from, 1)
+      copy.splice(to, 0, moved)
+      return copy
+    })
+    photoDragIndex.current = null
+  }
 
   const handleDragStart = (event) => {
     const slider = event.currentTarget
@@ -282,8 +347,15 @@ const HomePage = () => {
               ))}
             </div>
             <div className={styles.photoGrid}>
-              {profilePhotos.slice(0, 6).map((photo, index) => (
-                <div key={index} className={styles.photoTile}>
+              {photos.slice(0, 6).map((photo, index) => (
+                <div
+                  key={index}
+                  className={styles.photoTile}
+                  draggable
+                  onDragStart={(e) => handlePhotoDragStart(e, index)}
+                  onDragOver={handlePhotoDragOver}
+                  onDrop={(e) => handlePhotoDrop(e, index)}
+                >
                   <img className={styles.profilePhoto} src={photo} alt={`Explore ${index + 1}`} />
                 </div>
               ))}
@@ -315,9 +387,24 @@ const HomePage = () => {
               <p>Creative storyteller • sharing reels, photos, and authentic moments.</p>
             </div>
             <div className={styles.photoGrid}>
-              {profilePhotos.map((photo, index) => (
-                <div key={index} className={styles.photoTile}>
-                  <img className={styles.profilePhoto} src={photo} alt={`Profile ${index + 1}`} />
+              {photos.map((photo, index) => (
+                <div
+                  key={index}
+                  className={styles.photoTile}
+                  draggable
+                  onDragStart={(e) => handlePhotoDragStart(e, index)}
+                  onDragOver={handlePhotoDragOver}
+                  onDrop={(e) => handlePhotoDrop(e, index)}
+                >
+                  <img
+                    className={styles.profilePhoto}
+                    src={photo}
+                    alt={`Profile ${index + 1}`}
+                    onClick={() => { setModalImage(photo); setModalOpen(true); }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { setModalImage(photo); setModalOpen(true); } }}
+                  />
                 </div>
               ))}
             </div>
@@ -326,47 +413,34 @@ const HomePage = () => {
       </main>
 
       <nav className={styles.bottomNav}>
-        <button
-          type="button"
-          className={`${styles.navButton} ${activeTab === 'home' ? styles.active : ''}`}
-          onClick={() => setActiveTab('home')}
-        >
-          <Home size={20} />
-          <span className={styles.navLabel}>Home</span>
-        </button>
-        <button
-          type="button"
-          className={`${styles.navButton} ${activeTab === 'reels' ? styles.active : ''}`}
-          onClick={() => setActiveTab('reels')}
-        >
-          <Film size={20} />
-          <span className={styles.navLabel}>Reels</span>
-        </button>
-        <button
-          type="button"
-          className={`${styles.navButton} ${activeTab === 'dm' ? styles.active : ''}`}
-          onClick={() => setActiveTab('dm')}
-        >
-          <MessageCircle size={20} />
-          <span className={styles.navLabel}>DM</span>
-        </button>
-        <button
-          type="button"
-          className={`${styles.navButton} ${activeTab === 'search' ? styles.active : ''}`}
-          onClick={() => setActiveTab('search')}
-        >
-          <Search size={20} />
-          <span className={styles.navLabel}>Search</span>
-        </button>
-        <button
-          type="button"
-          className={`${styles.navButton} ${activeTab === 'profile' ? styles.active : ''}`}
-          onClick={() => setActiveTab('profile')}
-        >
-          <User size={20} />
-          <span className={styles.navLabel}>Profile</span>
-        </button>
+        {navItems.map((item, index) => {
+          const Icon = item.icon
+          return (
+            <button
+              key={item.id}
+              type="button"
+              className={`${styles.navButton} ${activeTab === item.id ? styles.active : ''}`}
+              onClick={() => setActiveTab(item.id)}
+              draggable
+              onDragStart={(e) => handleNavDragStart(e, index)}
+              onDragOver={handleNavDragOver}
+              onDrop={(e) => handleNavDrop(e, index)}
+            >
+              <Icon size={20} />
+              <span className={styles.navLabel}>{item.label}</span>
+            </button>
+          )
+        })}
       </nav>
+
+      {modalOpen && (
+        <div className={styles.modalOverlay} onClick={() => setModalOpen(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalClose} onClick={() => setModalOpen(false)} aria-label="Close preview">✕</button>
+            <img className={styles.modalImage} src={modalImage} alt="Profile preview" />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
